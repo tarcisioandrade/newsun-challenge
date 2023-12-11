@@ -1,0 +1,26 @@
+{
+  "nomeCompleto": "Tarcisio",
+  "email": "tarcisio@gmail.com",
+  "telefone": "7199987456",
+  "unidades": [
+    {
+      "codigoDaUnidadeConsumidora": "4002961560",
+      "enquadramento": "B3",
+      "modeloFasico": "trifasico",
+      "historicoDeConsumoEmKWH": [
+        {
+          "consumoForaPontaEmKWH": 26480,
+          "mesDoConsumo": "2022-12-01T00:00:00.000Z"
+        },
+        {
+          "consumoForaPontaEmKWH": 25000,
+          "mesDoConsumo": "2022-12-01T00:00:00.000Z"
+        },
+        {
+          "consumoForaPontaEmKWH": 24640,
+          "mesDoConsumo": "2022-12-01T00:00:00.000Z"
+        }
+      ]
+    }
+  ]
+}
