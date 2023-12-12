@@ -10,6 +10,7 @@ describe("Lead Tests", () => {
   beforeEach(() => {
     inputUnidade = [
       {
+        valor: 754.25,
         codigoDaUnidadeConsumidora: "1212",
         enquadramento: "B1",
         modeloFasico: "bifasico",
@@ -29,7 +30,7 @@ describe("Lead Tests", () => {
     const lead = Lead.create(inputLead);
 
     console.log("lead", lead);
-    expect(lead.email).toEqual(inputLead.email);
+    expect(lead.email.value).toEqual(inputLead.email);
   });
 
   it("Deve disparar um erro ao tentar criar uma lead sem uma unidade", () => {

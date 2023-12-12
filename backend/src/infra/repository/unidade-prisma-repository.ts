@@ -1,25 +1,27 @@
 import { UnidadeRepository } from "@/domain/repository-interfaces/unidade-repository";
-import { UnidadeProps, Unidade } from "@/domain/entities/unidade";
+import { Unidade } from "@/domain/entities/unidade";
 import prisma from "../database/prisma";
 
 export class UnidadePrismaRepository implements UnidadeRepository {
-  async create(input: UnidadeProps[], leadId: string) {
-    const unidades = input.map((uni) => Unidade.create(uni));
+  async create(unidades: Unidade[], leadId: string) {
+    // const unidades = input.map((uni) => Unidade.create(uni));
 
     await prisma.$transaction(async (prismaClient) => {
       for (const unidade of unidades) {
         const {
+          valor,
           codigoDaUnidadeConsumidora,
           enquadramento,
           historicoDeConsumoEmKWH,
           modeloFasico,
-        } = unidade.toObject();
+        } = unidade;
 
         const newUnidade = await prismaClient.unidade.create({
           data: {
+            valor: valor.value,
             codigoDaUnidadeConsumidora,
-            enquadramento,
-            modeloFasico,
+            enquadramento: enquadramento.value,
+            modeloFasico: modeloFasico.value,
             leadId,
           },
         });

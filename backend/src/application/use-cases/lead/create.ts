@@ -3,16 +3,15 @@ import { Lead, LeadProps } from "@/domain/entities/lead";
 import { LeadRepository } from "@/domain/repository-interfaces/lead-repository";
 import { UnidadeRepository } from "@/domain/repository-interfaces/unidade-repository";
 
-export class Create implements UseCase<LeadProps, LeadProps> {
+export class Create implements UseCase<LeadProps, Lead> {
   constructor(
     private readonly leadRepo: LeadRepository,
     private readonly unidadeRepo: UnidadeRepository
   ) {}
   async execute(input: LeadProps) {
-    const lead = Lead.create(input);
-    const leadCreated = await this.leadRepo.create(lead);
+    const leadCreated = await this.leadRepo.create(input);
 
-    await this.unidadeRepo.create(leadCreated.unidades, leadCreated.id);
+    await this.unidadeRepo.create(leadCreated.unidades, leadCreated.id.value);
 
     return leadCreated;
   }

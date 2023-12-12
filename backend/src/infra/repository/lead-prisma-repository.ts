@@ -1,16 +1,21 @@
-import { Lead } from "@/domain/entities/lead";
+import { Lead, LeadProps } from "@/domain/entities/lead";
 import { LeadRepository } from "@/domain/repository-interfaces/lead-repository";
 import prisma from "../database/prisma";
 
 export class LeadPrismaRepository implements LeadRepository {
-  async create(input: Lead) {
-    const { unidades, ...rest } = input.toObject();
+  async create(input: LeadProps) {
+    const lead = Lead.create(input);
 
-    const newLead = await prisma.lead.create({
-      data: rest,
+    await prisma.lead.create({
+      data: {
+        id: lead.id.value,
+        email: lead.email.value,
+        telefone: lead.telefone.value,
+        nomeCompleto: lead.nomeCompleto,
+      },
     });
 
-    return { ...newLead, unidades };
+    return lead;
   }
 
   async getByEmail(email: string) {
@@ -27,7 +32,9 @@ export class LeadPrismaRepository implements LeadRepository {
       },
     });
 
-    return lead;
+    if (!lead) return null;
+
+    return Lead.create(lead, lead?.id);
   }
 
   async getById(id: string) {
@@ -37,21 +44,15 @@ export class LeadPrismaRepository implements LeadRepository {
       },
       include: {
         unidades: {
-          select: {
-            codigoDaUnidadeConsumidora: true,
-            enquadramento: true,
-            modeloFasico: true,
-            historicoDeConsumoEmKWH: {
-              select: {
-                mesDoConsumo: true,
-                consumoForaPontaEmKWH: true,
-              },
-            },
+          include: {
+            historicoDeConsumoEmKWH: true,
           },
         },
       },
     });
 
-    return lead;
+    if (!lead) return null;
+
+    return Lead.create(lead, lead.id);
   }
 }

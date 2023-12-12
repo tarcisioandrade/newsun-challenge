@@ -33,6 +33,7 @@ export class LeadDTO {
     this.email = props.email;
     this.telefone = props.telefone;
     this.unidades = props.unidades.map((uni) => ({
+      valor: uni.valor,
       codigoDaUnidadeConsumidora: uni.unit_key,
       enquadramento: uni.chargingModel,
       modeloFasico: uni.phaseModel,

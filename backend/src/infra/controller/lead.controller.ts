@@ -18,20 +18,15 @@ export async function createLead(req: Request, res: Response) {
   try {
     let lead = req.body;
 
-    const leadInput = new LeadDTO(lead);
-
-    if (
-      !leadInput.nomeCompleto ||
-      !leadInput.email ||
-      !leadInput.telefone ||
-      !leadInput.unidades
-    ) {
+    if (!lead.nomeCompleto || !lead.email || !lead.telefone || !lead.unidades) {
       res.status(500).json({
         success: false,
         message: "Por favor, envie todos os campos necessários.",
       });
       return;
     }
+
+    const leadInput = new LeadDTO(lead);
 
     const alreadyExists = await getLeadByEmail.execute(leadInput.email);
 
@@ -44,7 +39,7 @@ export async function createLead(req: Request, res: Response) {
 
     const newLead = await createLeadUseCase.execute(leadInput);
 
-    res.status(200).json({ success: true, lead: newLead });
+    res.status(200).json({ success: true, lead: newLead.toObject() });
   } catch (error: any) {
     if (error instanceof EntityError) {
       res.status(400).json({ success: false, message: error.message });
@@ -64,7 +59,7 @@ export async function leadById(req: Request, res: Response) {
       return;
     }
 
-    res.status(200).json({ success: true, lead });
+    res.status(200).json({ success: true, lead: lead.toObject() });
   } catch (error: any) {
     if (error instanceof EntityError) {
       res.status(400).json({ success: false, message: error.message });

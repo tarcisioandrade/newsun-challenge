@@ -1,7 +1,7 @@
-import { LeadProps, Lead } from "../entities/lead";
+import { Lead, LeadProps } from "../entities/lead";
 
 export interface LeadRepository {
-  create(input: Lead): Promise<Required<LeadProps>>;
-  getByEmail(email: string): Promise<Required<Omit<LeadProps, "unidades">> | null>;
-  getById(id: string): Promise<Required<Omit<LeadProps, "unidades">> | null>;
+  create(input: LeadProps): Promise<Lead>;
+  getByEmail(email: string): Promise<Lead | null>;
+  getById(id: string): Promise<Lead | null>;
 }

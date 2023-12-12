@@ -1,5 +1,5 @@
-import { Unidade, UnidadeProps } from "../entities/unidade";
+import { Unidade } from "../entities/unidade";
 
 export interface UnidadeRepository {
-  create(input: UnidadeProps[], leadId: string): Promise<Unidade[]>;
+  create(input: Unidade[], leadId: string): Promise<Unidade[]>;
 }

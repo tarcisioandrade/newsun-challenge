@@ -4,5 +4,11 @@ export interface ConsumoProps {
 }
 
 export class Consumo {
-  constructor(readonly props: ConsumoProps) {}
+  readonly consumoForaPontaEmKWH: number;
+  readonly mesDoConsumo: Date;
+
+  constructor(props: ConsumoProps) {
+    this.consumoForaPontaEmKWH = props.consumoForaPontaEmKWH;
+    this.mesDoConsumo = props.mesDoConsumo;
+  }
 }

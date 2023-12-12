@@ -9,6 +9,7 @@ export function generateHistoricoDeConsumoEmKWH(length: number) {
 
 it("Deve disparar um erro ao tentar criar um sem o historico dos ultimos doze meses", () => {
   let inputUnidade: UnidadeProps = {
+    valor: 754.25,
     codigoDaUnidadeConsumidora: "1212",
     enquadramento: "B1",
     modeloFasico: "bifasico",
