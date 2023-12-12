@@ -1,5 +1,3 @@
-import { Unidade } from "./Unidade";
-
 export interface Lead {
   id: string;
   nomeCompleto: string;
@@ -9,6 +7,19 @@ export interface Lead {
 }
 
 export interface HistoricoDeConsumoEmKWH {
+  consumoForaPontaEmKWH: number;
+  mesDoConsumo: Date;
+}
+
+export interface Unidade {
+  valor: number;
+  codigoDaUnidadeConsumidora: string;
+  modeloFasico: "monofasico" | "bifasico" | "trifasico";
+  enquadramento: "AX" | "B1" | "B2" | "B3";
+  historicoDeConsumoEmKWH: ConsumoProps[];
+}
+
+export interface ConsumoProps {
   consumoForaPontaEmKWH: number;
   mesDoConsumo: Date;
 }

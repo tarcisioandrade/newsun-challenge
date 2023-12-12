@@ -1,17 +1,14 @@
-import { Input } from "@/components/ui/input";
+import LeadList from "@/components/lead-list";
+import SearchInput from "@/components/search-input";
 import React from "react";
 
-const ListagemPage = () => {
+const ListagemPage = ({ searchParams }: { searchParams: { q: string } }) => {
+  const { q } = searchParams;
+
   return (
-    <div className="grid place-items-center h-screen">
-      <div className="flex gap-4">
-        <select name="" id="">
-          <option value="">Email</option>
-          <option value="">nome</option>
-          <option value="">codigo da unidade</option>
-        </select>
-        <Input type="search" placeholder="Pesquisar" />
-      </div>
+    <div className="mt-24">
+      <SearchInput />
+      <LeadList filter={q} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-export interface Unidade {
+export interface UnidadeOrigin {
   valor: number;
   barcode: string;
   chargingModel: string;
