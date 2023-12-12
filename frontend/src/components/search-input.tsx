@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const SearchInput = () => {
-  const [searchValue, setSearchValue] = useState<string | null>(null);
+  const [searchValue, setSearchValue] = useState<string | undefined>(undefined);
 
   const router = useRouter();
   const haveSearch = useSearchParams().get("q");
@@ -17,6 +17,7 @@ const SearchInput = () => {
 
   const cleanSearch = () => {
     router.push("/listagem");
+    setSearchValue("");
   };
 
   return (
@@ -35,6 +36,7 @@ const SearchInput = () => {
           type="search"
           placeholder="Pesquisar"
           className="w-[200px]"
+          value={searchValue}
         />
         <Button type="submit" onClick={handleSearch}>
           Pesquisar
