@@ -29,7 +29,6 @@ describe("Lead Tests", () => {
   it("Deve criar uma nova lead", () => {
     const lead = Lead.create(inputLead);
 
-    console.log("lead", lead);
     expect(lead.email.value).toEqual(inputLead.email);
   });
 

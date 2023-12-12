@@ -6,6 +6,9 @@ import { EntityError } from "@/domain/shared/entity-error";
 import { GetByEmail } from "@/application/use-cases/lead/get-by-email";
 import { GetById } from "@/application/use-cases/lead/get-by-id";
 import { LeadDTO } from "../dto/leadDTO";
+import { GetAllLeadWithFilter } from "@/application/use-cases/lead/get-all-lead-with-filter";
+import { GetAllLead } from "@/application/use-cases/lead/get-all-lead";
+import { Lead } from "@/domain/entities/lead";
 
 const leadRepo = new LeadPrismaRepository();
 const unidadeRepo = new UnidadePrismaRepository();
@@ -13,6 +16,8 @@ const unidadeRepo = new UnidadePrismaRepository();
 const createLeadUseCase = new Create(leadRepo, unidadeRepo);
 const getLeadByEmail = new GetByEmail(leadRepo);
 const getLeadById = new GetById(leadRepo);
+const getAllLeadWithFilter = new GetAllLeadWithFilter(leadRepo);
+const getAllLead = new GetAllLead(leadRepo);
 
 export async function createLead(req: Request, res: Response) {
   try {
@@ -67,4 +72,19 @@ export async function leadById(req: Request, res: Response) {
     }
     res.status(500).json({ success: false, message: error.message });
   }
+}
+
+export async function leadListFilter(req: Request, res: Response) {
+  const filter = req.query.filter;
+  let leads: Lead[] = [];
+
+  if (filter) {
+    leads = await getAllLeadWithFilter.execute(String(filter));
+  } else {
+    leads = await getAllLead.execute();
+  }
+
+  res
+    .status(200)
+    .json({ succes: true, leads: leads.map((lead) => lead.toObject()) });
 }
