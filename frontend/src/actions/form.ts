@@ -36,6 +36,10 @@ export async function createLead(prevState: any, formData: FormData) {
 
       const unidadeBody: UnidadeOrigin = await res.json();
 
+      if (res.status === 400) {
+        throw new Error("Arquivo inválido.");
+      }
+
       unidades.push(unidadeBody);
     }
 
