@@ -1,3 +1,4 @@
+
 # Executando o projeto
 
 Clone o projeto no diretório que desejar executando o comando abaixo:
@@ -8,13 +9,13 @@ Clone o projeto no diretório que desejar executando o comando abaixo:
 
 Entre na pasta `/backend` e instale as dependências com `npm install`;
 
-Crie um banco de dados postgresql local e coloque a string de conexão em um arquivo `.env` seguindo o `.env.example` disponível no repositório;
+Crie o banco de dados executando o comando: `docker compose up -d`
 
 Execute o comando `npx prisma migrate deploy` para criar as tabelas;
-
-Inicie o servidor com o comando `npm run dev`
 >[!NOTE]
->O servidor será executado na porta 3333
+>Já existe o arquivo `.env` com a string de conexão compatível com as informações no docker-compose.yaml 
+
+Inicie o servidor com o comando `npm run dev`, o servidor será executado na porta **3333**
 
 ## Frontend
 
@@ -23,4 +24,4 @@ Entre na pasta `/frontend` e instale as dependências com `npm install`;
 Inicie o o projeto com o comando `npm run dev`
 
 >[!NOTE]
->O servidor deve permanecer ligado para utilizar os recursos disponiveis.
+>O servidor deve permanecer ligado para utilizar os recursos disponíveis.
