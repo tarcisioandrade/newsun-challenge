@@ -32,15 +32,19 @@ export class LeadDTO {
     this.nomeCompleto = props.nomeCompleto;
     this.email = props.email;
     this.telefone = props.telefone;
-    this.unidades = props.unidades.map((uni) => ({
-      valor: uni.valor,
-      codigoDaUnidadeConsumidora: uni.unit_key,
-      enquadramento: uni.chargingModel,
-      modeloFasico: uni.phaseModel,
-      historicoDeConsumoEmKWH: uni.invoice.map((inv) => ({
-        consumoForaPontaEmKWH: inv.consumo_fp,
-        mesDoConsumo: new Date(inv.consumo_date),
-      })),
-    }));
+    try {
+      this.unidades = props.unidades.map((uni) => ({
+        valor: uni.valor,
+        codigoDaUnidadeConsumidora: uni.unit_key,
+        enquadramento: uni.chargingModel,
+        modeloFasico: uni.phaseModel,
+        historicoDeConsumoEmKWH: uni.invoice.map((inv) => ({
+          consumoForaPontaEmKWH: inv.consumo_fp,
+          mesDoConsumo: new Date(inv.consumo_date),
+        })),
+      }));
+    } catch (error) {
+      throw new Error("Arquivo inválido.");
+    }
   }
 }
