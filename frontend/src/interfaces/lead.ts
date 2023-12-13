@@ -12,7 +12,7 @@ export interface HistoricoDeConsumoEmKWH {
 }
 
 export interface Unidade {
-  valor: number;
+  valor: string;
   codigoDaUnidadeConsumidora: string;
   modeloFasico: "monofasico" | "bifasico" | "trifasico";
   enquadramento: "AX" | "B1" | "B2" | "B3";
