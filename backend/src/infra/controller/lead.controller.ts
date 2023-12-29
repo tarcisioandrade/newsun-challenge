@@ -2,19 +2,19 @@ import { Request, Response } from "express";
 import { Create } from "@/application/use-cases/lead/create";
 import { LeadPrismaRepository } from "../repository/lead-prisma-repository";
 import { UnidadePrismaRepository } from "../repository/unidade-prisma-repository";
-import { EntityError } from "@/domain/shared/entity-error";
-import { GetByEmail } from "@/application/use-cases/lead/get-by-email";
+import { Exists } from "@/application/use-cases/lead/exists";
 import { GetById } from "@/application/use-cases/lead/get-by-id";
 import { LeadDTO } from "../dto/leadDTO";
 import { GetAllLeadWithFilter } from "@/application/use-cases/lead/get-all-lead-with-filter";
 import { GetAllLead } from "@/application/use-cases/lead/get-all-lead";
-import { Lead } from "@/domain/entities/lead";
+import { Lead } from "@/domain/entities/lead/lead";
+import { clientError, ok, fail, notFound, created } from "../httpResponse";
 
 const leadRepo = new LeadPrismaRepository();
 const unidadeRepo = new UnidadePrismaRepository();
 
 const createLeadUseCase = new Create(leadRepo, unidadeRepo);
-const getLeadByEmail = new GetByEmail(leadRepo);
+const leadExists = new Exists(leadRepo);
 const getLeadById = new GetById(leadRepo);
 const getAllLeadWithFilter = new GetAllLeadWithFilter(leadRepo);
 const getAllLead = new GetAllLead(leadRepo);
@@ -23,34 +23,30 @@ export async function createLead(req: Request, res: Response) {
   try {
     let lead = req.body;
 
+    console.log("req.body", req.body);
     if (!lead.nomeCompleto || !lead.email || !lead.telefone || !lead.unidades) {
-      res.status(500).json({
-        success: false,
+      return fail(res, {
         message: "Por favor, envie todos os campos necessários.",
       });
-      return;
     }
 
     const leadInput = new LeadDTO(lead);
 
-    const alreadyExists = await getLeadByEmail.execute(leadInput.email);
+    const alreadyExists = await leadExists.execute(leadInput.email);
 
-    if (alreadyExists) {
-      res
-        .status(400)
-        .json({ success: false, message: "Este e-mail já existe." });
-      return;
+    if (alreadyExists.isRight()) {
+      return clientError(res, { message: alreadyExists.value.message });
     }
 
     const newLead = await createLeadUseCase.execute(leadInput);
 
-    res.status(200).json({ success: true, lead: newLead.toObject() });
-  } catch (error: any) {
-    if (error instanceof EntityError) {
-      res.status(400).json({ success: false, message: error.message });
-      return;
+    if (newLead.isLeft()) {
+      return clientError(res, { message: newLead.value.message });
     }
-    res.status(500).json({ success: false, message: error.message });
+
+    created(res, { lead: newLead.value.toObject() });
+  } catch (error: any) {
+    fail(res, { message: error.message });
   }
 }
 
@@ -60,17 +56,12 @@ export async function leadById(req: Request, res: Response) {
     const lead = await getLeadById.execute(id);
 
     if (!lead) {
-      res.status(404).json({ success: false, message: "Lead não encontrado." });
-      return;
+      return notFound(res, { message: "Lead não encontrado." });
     }
 
-    res.status(200).json({ success: true, lead: lead.toObject() });
+    ok(res, { lead: lead.toObject() });
   } catch (error: any) {
-    if (error instanceof EntityError) {
-      res.status(400).json({ success: false, message: error.message });
-      return;
-    }
-    res.status(500).json({ success: false, message: error.message });
+    fail(res, { message: error.message });
   }
 }
 
@@ -84,7 +75,5 @@ export async function leadListFilter(req: Request, res: Response) {
     leads = await getAllLead.execute();
   }
 
-  res
-    .status(200)
-    .json({ succes: true, leads: leads.map((lead) => lead.toObject()) });
+  ok(res, { leads: leads.map((lead) => lead.toObject()) });
 }

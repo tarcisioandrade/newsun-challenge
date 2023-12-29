@@ -45,6 +45,7 @@ export async function createLead(prevState: any, formData: FormData) {
 
     input.unidades = unidades;
 
+    console.log("input", JSON.stringify(input));
     const res = await fetch("http://localhost:3333/create_lead", {
       method: "POST",
       body: JSON.stringify(input),

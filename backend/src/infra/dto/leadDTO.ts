@@ -1,5 +1,3 @@
-import { UnidadeProps } from "@/domain/entities/unidade";
-
 type LeadInput = {
   nomeCompleto: string;
   email: string;
@@ -26,25 +24,21 @@ export class LeadDTO {
   nomeCompleto: string;
   email: string;
   telefone: string;
-  unidades: UnidadeProps[];
+  unidades: any[];
 
   constructor(props: LeadInput) {
     this.nomeCompleto = props.nomeCompleto;
     this.email = props.email;
     this.telefone = props.telefone;
-    try {
-      this.unidades = props.unidades.map((uni) => ({
-        valor: uni.valor,
-        codigoDaUnidadeConsumidora: uni.unit_key,
-        enquadramento: uni.chargingModel,
-        modeloFasico: uni.phaseModel,
-        historicoDeConsumoEmKWH: uni.invoice.map((inv) => ({
-          consumoForaPontaEmKWH: inv.consumo_fp,
-          mesDoConsumo: new Date(inv.consumo_date),
-        })),
-      }));
-    } catch (error) {
-      throw new Error("Arquivo inválido.");
-    }
+    this.unidades = props.unidades.map((uni) => ({
+      valor: uni.valor,
+      codigoDaUnidadeConsumidora: uni.unit_key,
+      enquadramento: uni.chargingModel,
+      modeloFasico: uni.phaseModel,
+      historicoDeConsumoEmKWH: uni.invoice.map((inv) => ({
+        consumoForaPontaEmKWH: inv.consumo_fp,
+        mesDoConsumo: new Date(inv.consumo_date),
+      })),
+    }));
   }
 }

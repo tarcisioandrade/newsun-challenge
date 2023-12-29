@@ -1,24 +1,25 @@
-import { Lead, LeadProps } from "@/domain/entities/lead";
+import { Lead } from "@/domain/entities/lead/lead";
 import { LeadRepository } from "@/domain/repository-interfaces/lead-repository";
 import prisma from "../database/prisma";
+import { LeadMapper } from "@/application/mappers/lead-mapper";
 
 export class LeadPrismaRepository implements LeadRepository {
-  async create(input: LeadProps) {
-    const lead = Lead.create(input);
+  async create(input: Lead) {
+    const lead = LeadMapper.toPersistence(input);
 
     await prisma.lead.create({
       data: {
-        id: lead.id.value,
-        email: lead.email.value,
-        telefone: lead.telefone.value,
+        id: lead.id,
+        email: lead.email,
+        telefone: lead.telefone,
         nomeCompleto: lead.nomeCompleto,
       },
     });
 
-    return lead;
+    return input;
   }
 
-  async getByEmail(email: string) {
+  async exists(email: string) {
     const lead = await prisma.lead.findUnique({
       where: {
         email,
@@ -34,7 +35,7 @@ export class LeadPrismaRepository implements LeadRepository {
 
     if (!lead) return null;
 
-    return Lead.create(lead, lead?.id);
+    return LeadMapper.toDomain(lead);
   }
 
   async getById(id: string) {
@@ -53,7 +54,7 @@ export class LeadPrismaRepository implements LeadRepository {
 
     if (!lead) return null;
 
-    return Lead.create(lead, lead.id);
+    return LeadMapper.toDomain(lead);
   }
 
   async getAllLeadWithFilter(filter: string) {
@@ -90,7 +91,7 @@ export class LeadPrismaRepository implements LeadRepository {
       },
     });
 
-    return leads.map((lead) => Lead.create(lead, lead.id));
+    return leads.map((lead) => LeadMapper.toDomain(lead)!);
   }
 
   async getAllLead() {
@@ -104,6 +105,6 @@ export class LeadPrismaRepository implements LeadRepository {
       },
     });
 
-    return leads.map((lead) => Lead.create(lead, lead.id));
+    return leads.map((lead) => LeadMapper.toDomain(lead)!);
   }
 }

@@ -1,11 +1,9 @@
 import { UnidadeRepository } from "@/domain/repository-interfaces/unidade-repository";
-import { Unidade } from "@/domain/entities/unidade";
+import { Unidade } from "@/domain/entities/unidade/unidade";
 import prisma from "../database/prisma";
 
 export class UnidadePrismaRepository implements UnidadeRepository {
   async create(unidades: Unidade[], leadId: string) {
-    // const unidades = input.map((uni) => Unidade.create(uni));
-
     await prisma.$transaction(async (prismaClient) => {
       for (const unidade of unidades) {
         const {
